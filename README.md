@@ -6,5 +6,5 @@ A Smart Mirror that incorporates features for fashion capture, clothing categori
 ## Contributing
 Don't commit to main. When you want to implement a new feature, create a new feature branch from the branch-folder (app, server, or mirror) and name the branch "[feature-name]-feature".
 
-## Authors and acknowledgment
+## Authors and Acknowledgment
 Anindya Barua, Olivia Chan, Kevin Ge, Nathan Martin, Ryan Nguyen, Eric Zhang
