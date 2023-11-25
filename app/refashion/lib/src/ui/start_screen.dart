@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:refashion/src/utils/nav_utils.dart';
-import 'package:refashion/src/ui/home_screen.dart';
+
+import 'main_navigation.dart';
 
 class StartScreen extends StatefulWidget {
   const StartScreen({super.key});
@@ -22,7 +23,7 @@ class _StartScreenState extends State<StartScreen> {
             ),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.pushReplacement(context, FadeTransitionTo(screen: const HomeScreen()));
+                  Navigator.pushReplacement(context, FadeTransitionTo(screen: const MainNavigation()));
                 },
                 child: const Text('Go Home'),
             )
