@@ -25,6 +25,7 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
   RangeValues temperatureRange = const RangeValues(-20, 40);
   DateTime dateRangeStart = DateTime(2000);
   DateTime dateRangeEnd = DateTime.now();
+  bool showOnlySaved = false;
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +99,7 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
       builder: (context) {
         return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
           return SizedBox(
-              height: 425,
+              height: 500,
               width: double.infinity,
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -212,8 +213,27 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
                               }
                             },
                             child: Text("End Date: ${dateRangeEnd.day}/${dateRangeEnd.month}/${dateRangeEnd.year}")
-                  ),
+                        ),
                       ],
+                    ),
+
+                    const SizedBox(height: 8.0),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 12.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Text("Show only saved outfits:"),
+                          Checkbox(
+                            value: showOnlySaved,
+                            onChanged: (res) {
+                              setState(() {
+                                showOnlySaved = res!;
+                              });
+                            }
+                          )
+                        ]
+                      ),
                     ),
 
                     Row(
@@ -224,7 +244,7 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
                               Navigator.pop(context);
                               searchOutfits();
                             },
-                            child: const Text("Confirm")
+                            child: const Text("Update")
                         ),
                         FilledButton.tonal(
                             onPressed: () {
@@ -234,6 +254,7 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
                                 temperatureRange = const RangeValues(-20, 40);
                                 dateRangeStart = DateTime(2000);
                                 dateRangeEnd = DateTime.now();
+                                showOnlySaved = false;
                               });
                             },
                             child: const Text("Reset")
@@ -266,9 +287,16 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
         && dateRangeStart.isBefore(outfit.date)
         && dateRangeEnd.isAfter(outfit.date)
       ) {
-        setState(() {
-          matchingOutfits.add(outfit);
-        });
+        if (showOnlySaved && outfit.saved) {
+          setState(() {
+            matchingOutfits.add(outfit);
+          });
+        } else if (!showOnlySaved) {
+          setState(() {
+            matchingOutfits.add(outfit);
+          });
+        }
+
       }
     }
   }
@@ -357,6 +385,7 @@ class _OutfitListItemState extends State<OutfitListItem> {
                               onPressed: () {
                                 setState(() {
                                   isSaved = !isSaved;
+                                  widget.outfit.saved = isSaved;
                                 });
                               },
                               icon: isSaved ? const Icon(Icons.star) : const Icon(Icons.star_border)

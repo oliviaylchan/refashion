@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:refashion/src/ui/saved_outfits_screen.dart';
+import 'package:refashion/src/ui/options_screen.dart';
 import 'package:refashion/src/ui/wardrobe_screen.dart';
 import 'package:refashion/src/ui/home_screen.dart';
 
@@ -77,14 +77,14 @@ class _MainNavigationState extends State<MainNavigation> {
                       label: "Home"
                   ),
                   NavigationDestination(
-                      selectedIcon: Icon(Icons.star),
-                      icon: Icon(Icons.star_border),
-                      label: "Saved"
-                  ),
-                  NavigationDestination(
                       selectedIcon: Icon(Icons.person),
                       icon: Icon(Icons.person_outlined),
                       label: "Wardrobe"
+                  ),
+                  NavigationDestination(
+                      selectedIcon: Icon(Icons.settings),
+                      icon: Icon(Icons.settings_outlined),
+                      label: "Settings"
                   ),
                 ]
             ),
@@ -94,8 +94,8 @@ class _MainNavigationState extends State<MainNavigation> {
               const Text("WIP"),
               const Text("WIP"),
               const HomeScreen(),
-              SavedOutfitsScreen(allOutfits: allOutfits!),
               WardrobeScreen(allOutfits: allOutfits!),
+              const OptionsScreen(),
             ][currPageIndex],
           );
         }
