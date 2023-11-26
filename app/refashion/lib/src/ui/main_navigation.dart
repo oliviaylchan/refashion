@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:refashion/src/ui/saved_outfits_screen.dart';
 import 'package:refashion/src/ui/wardrobe_screen.dart';
 import 'package:refashion/src/ui/home_screen.dart';
 
@@ -93,7 +94,7 @@ class _MainNavigationState extends State<MainNavigation> {
               const Text("WIP"),
               const Text("WIP"),
               const HomeScreen(),
-              const Text("WIP"),
+              SavedOutfitsScreen(allOutfits: allOutfits!),
               WardrobeScreen(allOutfits: allOutfits!),
             ][currPageIndex],
           );

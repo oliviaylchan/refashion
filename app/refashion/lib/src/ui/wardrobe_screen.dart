@@ -23,6 +23,8 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
   Set<StyleFilter> styleFilters = StyleFilter.values.toSet();
   Set<WeatherFilter> weatherFilters = WeatherFilter.values.toSet();
   RangeValues temperatureRange = const RangeValues(-20, 40);
+  DateTime dateRangeStart = DateTime(2000);
+  DateTime dateRangeEnd = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +98,7 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
       builder: (context) {
         return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
           return SizedBox(
-              height: 375,
+              height: 425,
               width: double.infinity,
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -117,7 +119,7 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
                     ),
 
                     const SizedBox(height: 8.0),
-                    const Text("Style", textAlign: TextAlign.left),
+                    const Text("Style"),
                     Wrap(
                       spacing: 5.0,
                       children: StyleFilter.values.map((StyleFilter style) {
@@ -139,7 +141,7 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
                     ),
 
                     const SizedBox(height: 8.0),
-                    const Text("Weather", textAlign: TextAlign.left),
+                    const Text("Weather"),
                     Wrap(
                       spacing: 5.0,
                       children: WeatherFilter.values.map((WeatherFilter weather) {
@@ -161,7 +163,7 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
                     ),
 
                     const SizedBox(height: 8.0),
-                    const Text("Temperature (°C)", textAlign: TextAlign.left),
+                    const Text("Temperature (°C)"),
                     RangeSlider(
                       values: temperatureRange,
                       max: 40,
@@ -178,22 +180,60 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
                       },
                     ),
 
+                    const SizedBox(height: 8.0),
+                    const Text("Date"),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         TextButton(
+                            onPressed: () async {
+                              final DateTime? picked = await showDatePicker(
+                                context: context,
+                                initialDate: dateRangeStart,
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime.now()
+                              );
+                              if (picked != null && picked != dateRangeStart) {
+                                  setState(() { dateRangeStart = picked; });
+                              }
+                            },
+                            child: Text("Start Date: ${dateRangeStart.day}/${dateRangeStart.month}/${dateRangeStart.year}")
+                        ),
+                        TextButton(
+                            onPressed: () async {
+                              final DateTime? picked = await showDatePicker(
+                                  context: context,
+                                  initialDate: dateRangeEnd,
+                                  firstDate: DateTime(2000),
+                                  lastDate: DateTime.now()
+                              );
+                              if (picked != null && picked != dateRangeEnd) {
+                                setState(() { dateRangeEnd = picked; });
+                              }
+                            },
+                            child: Text("End Date: ${dateRangeEnd.day}/${dateRangeEnd.month}/${dateRangeEnd.year}")
+                  ),
+                      ],
+                    ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        FilledButton(
                             onPressed: () {
                               Navigator.pop(context);
                               searchOutfits();
                             },
                             child: const Text("Confirm")
                         ),
-                        TextButton(
+                        FilledButton.tonal(
                             onPressed: () {
                               setState(() {
                                 styleFilters = StyleFilter.values.toSet();
                                 weatherFilters = WeatherFilter.values.toSet();
                                 temperatureRange = const RangeValues(-20, 40);
+                                dateRangeStart = DateTime(2000);
+                                dateRangeEnd = DateTime.now();
                               });
                             },
                             child: const Text("Reset")
@@ -223,6 +263,8 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
         && weatherFilterValues.any((filter) => outfit.weather.toLowerCase() == filter)
         && temperatureRange.start <= outfit.temperature
         && temperatureRange.end >= outfit.temperature
+        && dateRangeStart.isBefore(outfit.date)
+        && dateRangeEnd.isAfter(outfit.date)
       ) {
         setState(() {
           matchingOutfits.add(outfit);
@@ -234,16 +276,28 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
 
 
 // A list item that displays an outfit
-class OutfitListItem extends StatelessWidget {
+class OutfitListItem extends StatefulWidget {
+  const OutfitListItem({super.key, required this.outfit});
   final Outfit outfit;
 
-  const OutfitListItem({super.key, required this.outfit});
+  @override
+  State<OutfitListItem> createState() => _OutfitListItemState();
+}
+
+class _OutfitListItemState extends State<OutfitListItem> {
+  late bool isSaved;
+
+  @override
+  void initState() {
+    super.initState();
+    isSaved = widget.outfit.saved;
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        showOutfitDetails(context, outfit);
+        showOutfitDetails(context, widget.outfit);
       },
       child: Card(
         child: Padding(
@@ -251,7 +305,7 @@ class OutfitListItem extends StatelessWidget {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10.0),
             child: Image.network(
-              outfit.imageUrl,
+              widget.outfit.imageUrl,
               fit: BoxFit.cover,
             ),
           ),
@@ -265,57 +319,79 @@ class OutfitListItem extends StatelessWidget {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Dialog(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Expanded(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20.0),
-                    child: ShaderMask(
-                      shaderCallback: (Rect bounds) {
-                        return const LinearGradient(
-                            begin: Alignment(0, 0.95),
-                            end: Alignment(0, 0.75),
-                            colors: [
-                              Colors.transparent,
-                              Colors.black,
-                            ]
-                        ).createShader(bounds);
-                      },
-                      blendMode: BlendMode.dstIn,
-                      child: Image.network(
-                        outfit.imageUrl,
-                        fit: BoxFit.fitWidth,
+        return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+          return Dialog(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20.0),
+                      child: ShaderMask(
+                        shaderCallback: (Rect bounds) {
+                          return const LinearGradient(
+                              begin: Alignment(0, 0.95),
+                              end: Alignment(0, 0.75),
+                              colors: [
+                                Colors.transparent,
+                                Colors.black,
+                              ]
+                          ).createShader(bounds);
+                        },
+                        blendMode: BlendMode.dstIn,
+                        child: Image.network(
+                          outfit.imageUrl,
+                          fit: BoxFit.fitWidth,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      outfit.outfitName,
-                      style: const TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  isSaved = !isSaved;
+                                });
+                              },
+                              icon: isSaved ? const Icon(Icons.star) : const Icon(Icons.star_border)
+                          ),
+                          Text(
+                            outfit.outfitName,
+                            style: const TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(height: 8.0),
-                    Text('Weather: ${outfit.weather}'),
-                    Text('Temperature: ${outfit.temperature}°C'),
-                    Text('Style: ${outfit.style}'),
-                    Text('Date: ${outfit.date.toString()}'),
-                  ],
-                ),
-                TextButton(onPressed: () { Navigator.pop(context); }, child: const Text("Dismiss"))
-              ],
-            ),
-          )
-        );
-      });
+                      Padding(
+                        padding: const EdgeInsets.only(left: 48.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Weather: ${outfit.weather}'),
+                            Text('Temperature: ${outfit.temperature}°C'),
+                            Text('Style: ${outfit.style}'),
+                            Text('Date: ${outfit.date.day}/${outfit.date.month}/${outfit.date.year}'),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  TextButton(onPressed: () { Navigator.pop(context); }, child: const Text("Dismiss"))
+                ],
+              ),
+            )
+          );
+        });
+      }
+    );
   }
 }
 

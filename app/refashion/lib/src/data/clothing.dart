@@ -8,13 +8,17 @@ class Outfit {
   String style;
   DateTime date;
 
+  bool saved;
+
   Outfit(
       this.outfitName,
       this.imageUrl,
       this.weather,
       this.temperature,
       this.style,
-      this.date
+      this.date,
+
+      this.saved
   );
 
   Outfit.fromMap(Map<String, dynamic> map)
@@ -23,7 +27,8 @@ class Outfit {
       weather = map['weather'] ?? 'Missing weather',
       temperature = int.tryParse(map['temperature'] ?? '') ?? 0,
       style = map['purpose'] ?? 'Missing style',
-      date = DateTime.tryParse(map['date'] ?? '') ?? DateTime.now();
+      date = DateTime.tryParse(map['date'] ?? '') ?? DateTime.now(),
+      saved = false;
 
   static List<Outfit> listFromMapList(List<Map<String, dynamic>> mapList) {
     return mapList.map((map) => Outfit.fromMap(map)).toList();
