@@ -279,18 +279,79 @@ class OutfitListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(10.0),
-          child: Image.network(
-            outfit.imageUrl,
-            fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: () {
+        showOutfitDetails(context, outfit);
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10.0),
+            child: Image.network(
+              outfit.imageUrl,
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       ),
     );
+  }
+
+  // Show details modal
+  void showOutfitDetails(BuildContext context, Outfit outfit) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20.0),
+                  child: ShaderMask(
+                    shaderCallback: (Rect bounds) {
+                      return const LinearGradient(
+                          begin: Alignment(0, 0.95),
+                          end: Alignment(0, 0.75),
+                          colors: [
+                            Colors.transparent,
+                            Colors.black,
+                          ]
+                      ).createShader(bounds);
+                    },
+                    blendMode: BlendMode.dstIn,
+                    child: Image.network(
+                      outfit.imageUrl,
+                      fit: BoxFit.fitWidth,
+                    ),
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      outfit.outfitName,
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8.0),
+                    Text('Weather: ${outfit.weather}'),
+                    Text('Temperature: ${outfit.temperature}°C'),
+                    Text('Style: ${outfit.style}'),
+                    Text('Date: ${outfit.date.toString()}'),
+                  ],
+                ),
+                TextButton(onPressed: () { Navigator.pop(context); }, child: const Text("Dismiss"))
+              ],
+            ),
+          )
+        );
+      });
   }
 }
 
