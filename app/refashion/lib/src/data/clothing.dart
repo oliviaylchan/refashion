@@ -5,7 +5,7 @@ class Outfit {
 
   String weather;
   int temperature;
-  String purpose;
+  String style;
   DateTime date;
 
   Outfit(
@@ -13,7 +13,7 @@ class Outfit {
       this.imageUrl,
       this.weather,
       this.temperature,
-      this.purpose,
+      this.style,
       this.date
   );
 }
