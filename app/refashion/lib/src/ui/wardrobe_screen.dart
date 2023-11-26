@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'dart:developer' as dev;
 import '../data/clothing.dart';
 
 enum StyleFilter { casual, business, formal, party }
@@ -8,61 +7,16 @@ enum WeatherFilter { sunny, cloudy, rainy, snowing }
 
 
 class WardrobeScreen extends StatefulWidget {
-  const WardrobeScreen({super.key});
+  const WardrobeScreen({super.key, required this.allOutfits});
+
+  final List<Outfit> allOutfits;
 
   @override
   State<WardrobeScreen> createState() => _WardrobeScreenState();
 }
 
 class _WardrobeScreenState extends State<WardrobeScreen> {
-  // TODO Keep allOutfits, just change how to get it
-  List<Outfit> allOutfits = [
-    Outfit(
-        "test1",
-        "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSGfpQ3m-QWiXgCBJJbrcUFdNdWAhj7rcUqjeNUC6eKcXZDAtWm",
-        "sunny",
-        25,
-        "casual",
-        DateTime.now()
-    ),
-    Outfit(
-        "test2",
-        "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSGfpQ3m-QWiXgCBJJbrcUFdNdWAhj7rcUqjeNUC6eKcXZDAtWm",
-        "cloudy",
-        30,
-        "casual",
-        DateTime.now()
-    ),
-    Outfit(
-        "test3",
-        "https://storage.googleapis.com/refashion-2d41d.appspot.com/images/Casual%20Summer%20Outfit/shoe",
-        "cloudy",
-        30,
-        "casual",
-        DateTime.now()
-    ),
-    Outfit(
-        "test4",
-        "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSGfpQ3m-QWiXgCBJJbrcUFdNdWAhj7rcUqjeNUC6eKcXZDAtWm",
-        "cloudy",
-        30,
-        "casual",
-        DateTime.now()
-    ),
-    Outfit(
-        "test5",
-        "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSGfpQ3m-QWiXgCBJJbrcUFdNdWAhj7rcUqjeNUC6eKcXZDAtWm",
-        "cloudy",
-        30,
-        "casual",
-        DateTime.now()
-    ),
-  ];
-  late List<Outfit> matchingOutfits;
-
-  _WardrobeScreenState() {
-    matchingOutfits = List.from(allOutfits);
-  }
+  late List<Outfit> matchingOutfits = widget.allOutfits;
 
   String outfitNameSearch = "";
 
@@ -120,7 +74,15 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
                 ),
               ),
             ] ), ),
-            OutfitListView(outfits: matchingOutfits)
+            OutfitListView(outfits: matchingOutfits),
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Center(
+                  child: Text("You've reached the end!")
+                ),
+              )
+            ),
           ],
         ),
       ),
@@ -252,13 +214,13 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
     List<String> weatherFilterValues = weatherFilters.map((e) => e.toString().split('.').last).toList();
 
     setState(() {
-      matchingOutfits.clear();
+      matchingOutfits = [];
     });
 
-    for (Outfit outfit in allOutfits) {
-      if (outfit.outfitName.contains(outfitNameSearch)
-        && styleFilterValues.any((filter) => outfit.style == filter)
-        && weatherFilterValues.any((filter) => outfit.weather == filter)
+    for (Outfit outfit in widget.allOutfits) {
+      if (outfit.outfitName.toLowerCase().contains(outfitNameSearch.toLowerCase())
+        && styleFilterValues.any((filter) => outfit.style.toLowerCase() == filter)
+        && weatherFilterValues.any((filter) => outfit.weather.toLowerCase() == filter)
         && temperatureRange.start <= outfit.temperature
         && temperatureRange.end >= outfit.temperature
       ) {
@@ -309,23 +271,25 @@ class OutfitListItem extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(20.0),
-                  child: ShaderMask(
-                    shaderCallback: (Rect bounds) {
-                      return const LinearGradient(
-                          begin: Alignment(0, 0.95),
-                          end: Alignment(0, 0.75),
-                          colors: [
-                            Colors.transparent,
-                            Colors.black,
-                          ]
-                      ).createShader(bounds);
-                    },
-                    blendMode: BlendMode.dstIn,
-                    child: Image.network(
-                      outfit.imageUrl,
-                      fit: BoxFit.fitWidth,
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20.0),
+                    child: ShaderMask(
+                      shaderCallback: (Rect bounds) {
+                        return const LinearGradient(
+                            begin: Alignment(0, 0.95),
+                            end: Alignment(0, 0.75),
+                            colors: [
+                              Colors.transparent,
+                              Colors.black,
+                            ]
+                        ).createShader(bounds);
+                      },
+                      blendMode: BlendMode.dstIn,
+                      child: Image.network(
+                        outfit.imageUrl,
+                        fit: BoxFit.fitWidth,
+                      ),
                     ),
                   ),
                 ),
@@ -362,16 +326,29 @@ class OutfitListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverMasonryGrid(
-      delegate: SliverChildBuilderDelegate(
-            (context, index) {
-          return OutfitListItem(outfit: outfits[index]);
-        },
-        childCount: outfits.length,
-      ),
-      gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-      ),
-    );
+    if (outfits.isEmpty) {
+      return const SliverFillRemaining(
+        child: Center(child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.sailing_outlined),
+            SizedBox(height: 16),
+            Text("Nothing found!"),
+          ],
+        ))
+      );
+    } else {
+      return SliverMasonryGrid(
+        delegate: SliverChildBuilderDelegate(
+              (context, index) {
+            return OutfitListItem(outfit: outfits[index]);
+          },
+          childCount: outfits.length,
+        ),
+        gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+        ),
+      );
+    }
   }
 }
