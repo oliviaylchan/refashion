@@ -7,14 +7,15 @@ import '../data/clothing.dart';
 import '../utils/db_utils.dart';
 
 class MainNavigation extends StatefulWidget {
-  const MainNavigation({super.key});
+  const MainNavigation({super.key, this.startPageIndex = 2});
+  final int startPageIndex;
 
   @override
   State<MainNavigation> createState() => _MainNavigationState();
 }
 
 class _MainNavigationState extends State<MainNavigation> {
-  int currPageIndex = 2;
+  late int currPageIndex = widget.startPageIndex;
 
   late Future<List<Map<String, dynamic>>> futureOutfitData;
 

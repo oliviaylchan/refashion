@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../data/clothing.dart';
+import '../utils/nav_utils.dart';
+import 'main_navigation.dart';
 
 enum StyleFilter { casual, business, formal, party }
 enum WeatherFilter { sunny, cloudy, rainy, snowing }
@@ -32,54 +34,58 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 12.0),
-        child: CustomScrollView(
-          slivers: [
-            const SliverAppBar(
-              title: Text("Wardrobe"),
-              centerTitle: true,
-              floating: true,
-              forceMaterialTransparency: true,
-            ),
-            SliverList( delegate: SliverChildListDelegate( [
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          suffixIcon: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: IconButton.filledTonal(
-                                onPressed: () {
-                                  searchOutfits();
-                                },
-                                icon: const Icon(Icons.search)
+        child: RefreshIndicator(
+          onRefresh: () async {
+            Navigator.pushAndRemoveUntil(context, FadeTransitionTo(screen: const MainNavigation(startPageIndex: 3)), (route) => false);
+          },
+          child: CustomScrollView(
+            slivers: [
+              const SliverAppBar(
+                title: Text("Wardrobe"),
+                centerTitle: true,
+                forceMaterialTransparency: true,
+              ),
+              SliverList( delegate: SliverChildListDelegate( [
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          decoration: InputDecoration(
+                            suffixIcon: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: IconButton.filledTonal(
+                                  onPressed: () {
+                                    searchOutfits();
+                                  },
+                                  icon: const Icon(Icons.search)
+                              ),
+                            ),
+                            hintText: 'Outfit Name',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: const BorderSide(color: Colors.black),
                             ),
                           ),
-                          hintText: 'Outfit Name',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: const BorderSide(color: Colors.black),
-                          ),
+                          onChanged: (query) {
+                            setState(() {
+                              outfitNameSearch = query;
+                            });
+                          },
                         ),
-                        onChanged: (query) {
-                          setState(() {
-                            outfitNameSearch = query;
-                          });
-                        },
                       ),
-                    ),
-                    IconButton(
-                        onPressed: () { showFilters(); },
-                        icon: const Icon(Icons.filter_list)
-                    )
-                  ],
+                      IconButton(
+                          onPressed: () { showFilters(); },
+                          icon: const Icon(Icons.filter_list)
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ] ), ),
-            OutfitListView(outfits: matchingOutfits),
-          ],
+              ] ), ),
+              OutfitListView(outfits: matchingOutfits),
+            ],
+          ),
         ),
       ),
     );
@@ -279,17 +285,11 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
         && temperatureRange.end >= outfit.temperature
         && dateRangeStart.isBefore(outfit.date)
         && dateRangeEnd.isAfter(outfit.date)
+        && ((showOnlySaved && outfit.saved) || !showOnlySaved)
       ) {
-        if (showOnlySaved && outfit.saved) {
-          setState(() {
-            matchingOutfits.add(outfit);
-          });
-        } else if (!showOnlySaved) {
-          setState(() {
-            matchingOutfits.add(outfit);
-          });
-        }
-
+        setState(() {
+          matchingOutfits.add(outfit);
+        });
       }
     }
   }

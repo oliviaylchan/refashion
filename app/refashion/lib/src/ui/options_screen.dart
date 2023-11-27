@@ -22,7 +22,35 @@ class OptionsScreen extends StatelessWidget {
           children: [
             TextButton(
               onPressed: () {
-                Navigator.pushAndRemoveUntil(context, FadeTransitionTo(screen: const MainNavigation()), (route) => false);
+                showAcknowledgementsModal(context);
+              },
+              child: const Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(Icons.import_contacts_outlined),
+                    ),
+                    Text("Acknowledgements"),
+                  ]
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                showLicensePage(context: context);
+              },
+              child: const Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(Icons.document_scanner),
+                    ),
+                    Text("Flutter Licenses"),
+                  ]
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(context, FadeTransitionTo(screen: const MainNavigation(startPageIndex: 4)), (route) => false);
               },
               child: const Row(
                 children: [
@@ -53,6 +81,39 @@ class OptionsScreen extends StatelessWidget {
           ]
         ),
       )
+    );
+  }
+
+  void showAcknowledgementsModal(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const Dialog(
+          child: Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text("Credits to:", textScaleFactor: 1.5, style: TextStyle(fontWeight: FontWeight.bold)),
+                SizedBox(height: 8),
+                Text("  Anindya Barua"),
+                Text("  Olivia Chan"),
+                Text("  Kevin Ge"),
+                Text("  Nathan Martin"),
+                Text("  Ryan Nguyen"),
+                Text("  Eric Zhang"),
+                SizedBox(height: 12),
+
+                Text("Using:", textScaleFactor: 1.5, style: TextStyle(fontWeight: FontWeight.bold)),
+                SizedBox(height: 8),
+                Text("  Flutter"),
+                Text("  MongoDB"),
+                Text("  Raspberry Pi"),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
