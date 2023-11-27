@@ -78,14 +78,6 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
               ),
             ] ), ),
             OutfitListView(outfits: matchingOutfits),
-            const SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Center(
-                  child: Text("You've reached the end!")
-                ),
-              )
-            ),
           ],
         ),
       ),
