@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:refashion/src/utils/nav_utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'main_navigation.dart';
 
@@ -22,8 +23,10 @@ class _StartScreenState extends State<StartScreen> {
               'Welcome to Refashion:',
             ),
             ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   Navigator.pushReplacement(context, FadeTransitionTo(screen: const MainNavigation()));
+                  SharedPreferences preferences = await SharedPreferences.getInstance();
+                  preferences.setBool("loggedIn", true);
                 },
                 child: const Text('Go Home'),
             )
