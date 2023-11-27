@@ -5,14 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/nav_utils.dart';
 
-class OptionsScreen extends StatefulWidget {
+class OptionsScreen extends StatelessWidget {
   const OptionsScreen({super.key});
-
-  @override
-  State<OptionsScreen> createState() => _OptionsScreenState();
-}
-
-class _OptionsScreenState extends State<OptionsScreen> {
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +22,7 @@ class _OptionsScreenState extends State<OptionsScreen> {
           children: [
             TextButton(
               onPressed: () {
-                setState(() {
-                  Navigator.pushAndRemoveUntil(context, FadeTransitionTo(screen: const MainNavigation()), (route) => false);
-                });
+                Navigator.pushAndRemoveUntil(context, FadeTransitionTo(screen: const MainNavigation()), (route) => false);
               },
               child: const Row(
                 children: [
