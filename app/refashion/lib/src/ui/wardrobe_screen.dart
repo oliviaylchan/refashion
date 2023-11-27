@@ -38,6 +38,7 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
               title: Text("Wardrobe"),
               centerTitle: true,
               floating: true,
+              forceMaterialTransparency: true,
             ),
             SliverList( delegate: SliverChildListDelegate( [
               Padding(
