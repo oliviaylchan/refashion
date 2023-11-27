@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'src/ui/start_screen.dart';
 
+
 void main() {
   runApp(const RefashionApp());
 }
@@ -13,10 +14,12 @@ class RefashionApp extends StatelessWidget {
     return MaterialApp(
       title: 'Refashion',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
         useMaterial3: true,
+        fontFamily: 'Ubuntu Mono',
       ),
       home: const StartScreen(),
     );
   }
 }
+
+
