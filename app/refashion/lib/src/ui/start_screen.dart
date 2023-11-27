@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:refashion/src/ui/gallery/stats_screen.dart';
 import 'package:refashion/src/utils/nav_utils.dart';
-import 'package:refashion/src/ui/home_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'main_navigation.dart';
 
 class StartScreen extends StatefulWidget {
   const StartScreen({super.key});
@@ -75,12 +77,11 @@ class _StartScreenState extends State<StartScreen> {
     child: Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: ElevatedButton(
-        onPressed: () {
-          Navigator.pushReplacement(
-            context,
-            FadeTransitionTo(screen: const StatsScreen()),
-          );
-        },
+        onPressed: () async {
+            Navigator.pushReplacement(context, FadeTransitionTo(screen: const MainNavigation()));
+            SharedPreferences preferences = await SharedPreferences.getInstance();
+             preferences.setBool("loggedIn", true);
+          },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           side: const BorderSide(
@@ -95,11 +96,11 @@ class _StartScreenState extends State<StartScreen> {
               fontFamily: 'Ubuntu Mono',
               fontSize: 16,
               color: Color.fromARGB(255, 236, 236, 236)),
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 }
 
 class ForegroundPainter extends CustomPainter {
@@ -109,7 +110,7 @@ class ForegroundPainter extends CustomPainter {
       ..color = const Color.fromARGB(255, 236, 236, 236)
       ..strokeWidth = 0.9;
     final paintS = Paint()
-      ..color = Color.fromARGB(150, 0, 0, 0)
+      ..color = const Color.fromARGB(150, 0, 0, 0)
       ..strokeWidth = 4;
     //Points
     const p1 = Offset(20, 40);
