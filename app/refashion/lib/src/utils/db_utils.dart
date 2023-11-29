@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -26,7 +24,7 @@ Future<List<Map<String, dynamic>>> pullData(String collectionName) async {
 }
 
 // Function to push data to a collection in the database
-Future<void> pushData(String collectionName, Map<String, dynamic> data) async {
+void pushData(String collectionName, Map<String, dynamic> data) async {
   final db = await connectToDatabase();
   final collection = db.collection(collectionName);
   await collection.insert(data);
@@ -34,7 +32,7 @@ Future<void> pushData(String collectionName, Map<String, dynamic> data) async {
 }
 
 // Function to update data in a collection in the database
-Future<void> updatePhotoButtonState(bool value) async {
+void updatePhotoButtonState(bool value) async {
   final db = await connectToDatabase();
   final collection = db.collection("state");
   await collection.update(
