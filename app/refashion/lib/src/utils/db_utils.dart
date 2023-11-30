@@ -35,7 +35,15 @@ void pushData(String collectionName, Map<String, dynamic> data) async {
 void updateData(String collectionName, Map<String, dynamic> data) async {
   final db = await connectToDatabase();
   final collection = db.collection(collectionName);
-  await collection.update(where.eq('_id', data['_id']), data);
+  // not the most efficient way to set data, but it works
+  for (String key in data.keys) {
+    await collection.update(
+        where.eq('_id', data['_id']), modify.set(key, data[key]));
+  }
+  // // pull data from the collection to check if the update was successful
+  // final updatedData =
+  //     await collection.find(where.eq('_id', data['_id'])).toList();
+  // print("Updated data: $updatedData");
   await db.close();
 }
 

@@ -51,7 +51,7 @@ class Outfit {
   }
 
   void update() async {
-    updateData('outfits', {
+    updateData('outfit', {
       '_id': id,
       'name': outfitName,
       'imageUrl': imageUrl,
