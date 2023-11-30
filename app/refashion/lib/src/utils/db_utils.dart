@@ -31,6 +31,14 @@ void pushData(String collectionName, Map<String, dynamic> data) async {
   await db.close();
 }
 
+// Function to update data in a collection
+void updateData(String collectionName, Map<String, dynamic> data) async {
+  final db = await connectToDatabase();
+  final collection = db.collection(collectionName);
+  await collection.update(where.eq('_id', data['_id']), data);
+  await db.close();
+}
+
 // Function to update data in a collection in the database
 void updatePhotoButtonState(bool value) async {
   final db = await connectToDatabase();

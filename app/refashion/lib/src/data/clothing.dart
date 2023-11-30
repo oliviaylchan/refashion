@@ -51,7 +51,7 @@ class Outfit {
   }
 
   void update() async {
-    pushData('outfits', {
+    updateData('outfits', {
       '_id': id,
       'name': outfitName,
       'imageUrl': imageUrl,
