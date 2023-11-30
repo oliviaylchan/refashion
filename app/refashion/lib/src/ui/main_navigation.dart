@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:refashion/src/ui/gallery/stats_screen.dart';
 import 'package:refashion/src/ui/options_screen.dart';
 import 'package:refashion/src/ui/wardrobe_screen.dart';
 import 'package:refashion/src/ui/home_screen.dart';
@@ -93,7 +94,7 @@ class _MainNavigationState extends State<MainNavigation> {
             // Navbar destinations
             body: <Widget>[
               const Text("WIP"),
-              const Text("WIP"),
+              const StatsScreen(),
               const HomeScreen(),
               WardrobeScreen(allOutfits: allOutfits!),
               const OptionsScreen(),
