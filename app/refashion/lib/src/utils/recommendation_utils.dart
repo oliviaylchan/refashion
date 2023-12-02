@@ -9,7 +9,7 @@ Future<Outfit> recommendOutfit(List<Outfit>? allOutfits) async {
     return Outfit(
       getObjectId(),
       "Couldn't find an outfit!",
-      "https://img.freepik.com/free-vector/oops-404-error-with-broken-robot-concept-illustration_114360-5529.jpg?w=1060&t=st=1701478386~exp=1701478986~hmac=0af0fb5193ef9675a1f54eca0906878fc6b4b54bedd514c4e05651ec9ddd51d2",
+      "https://images.unsplash.com/photo-1609743522653-52354461eb27?q=80&w=2487&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "Not found",
       0,
       "Not found",

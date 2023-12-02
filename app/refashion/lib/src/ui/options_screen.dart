@@ -1,7 +1,9 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:refashion/src/ui/main_navigation.dart';
 import 'package:refashion/src/ui/start_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../utils/nav_utils.dart';
 
@@ -88,27 +90,33 @@ class OptionsScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return const Dialog(
+        return Dialog(
           child: Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text("Credits to:", textScaleFactor: 1.5, style: TextStyle(fontWeight: FontWeight.bold)),
-                SizedBox(height: 8),
-                Text("  Anindya Barua"),
-                Text("  Olivia Chan"),
-                Text("  Kevin Ge"),
-                Text("  Nathan Martin"),
-                Text("  Ryan Nguyen"),
-                Text("  Eric Zhang"),
-                SizedBox(height: 12),
+                const Text("Credits to:", textScaleFactor: 1.5, style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                const Text("  Anindya Barua"),
+                const Text("  Olivia Chan"),
+                const Text("  Kevin Ge"),
+                const Text("  Nathan Martin"),
+                const Text("  Ryan Nguyen"),
+                const Text("  Eric Zhang"),
+                const SizedBox(height: 12),
 
-                Text("Using:", textScaleFactor: 1.5, style: TextStyle(fontWeight: FontWeight.bold)),
-                SizedBox(height: 8),
-                Text("  Flutter"),
-                Text("  MongoDB"),
-                Text("  Raspberry Pi"),
+                const Text("Using:", textScaleFactor: 1.5, style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                const Text("Flutter"),
+                const Text("MongoDB"),
+                const Text("Raspberry Pi"),
+                RichText( text: TextSpan(
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {launchUrl(Uri.parse("https://unsplash.com/license"));},
+                  style: const TextStyle(color: Colors.blue, fontFamily: 'Ubuntu Mono', fontSize: 13),
+                  text: "Unsplash",
+                ) ),
               ],
             ),
           ),
