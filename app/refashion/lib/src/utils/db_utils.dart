@@ -55,3 +55,7 @@ void updatePhotoButtonState(bool value) async {
       where.eq('name', 'photoButton'), modify.set('value', value));
   await db.close();
 }
+
+ObjectId getObjectId() {
+  return ObjectId();
+}

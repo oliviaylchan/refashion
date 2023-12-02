@@ -95,7 +95,7 @@ class _MainNavigationState extends State<MainNavigation> {
             body: <Widget>[
               const Text("WIP"),
               const StatsScreen(),
-              const HomeScreen(),
+              HomeScreen(allOutfits: allOutfits!),
               WardrobeScreen(allOutfits: allOutfits!),
               const OptionsScreen(),
             ][currPageIndex],

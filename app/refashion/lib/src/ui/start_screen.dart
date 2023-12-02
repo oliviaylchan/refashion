@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:refashion/src/ui/gallery/stats_screen.dart';
 import 'package:refashion/src/utils/nav_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

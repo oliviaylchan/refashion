@@ -95,6 +95,7 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
                 )
               ] ), ),
               OutfitListView(outfits: matchingOutfits),
+              const SliverPadding(padding: EdgeInsets.only(bottom: 12)),
             ],
           ),
         ),
@@ -326,18 +327,10 @@ class OutfitListItem extends StatefulWidget {
 }
 
 class _OutfitListItemState extends State<OutfitListItem> {
-  late bool isSaved;
-
   late String editedName = widget.outfit.outfitName;
   late String editedWeather = widget.outfit.weather;
   late int editedTemperature = widget.outfit.temperature;
   late String editedStyle = widget.outfit.style;
-
-  @override
-  void initState() {
-    super.initState();
-    isSaved = widget.outfit.saved;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -390,11 +383,13 @@ class _OutfitListItemState extends State<OutfitListItem> {
                           IconButton(
                               onPressed: () {
                                 setState(() {
-                                  isSaved = !isSaved;
-                                  widget.outfit.saved = isSaved;
+                                  setDetailsState(() {
+                                    outfit.saved = !outfit.saved;
+                                    outfit.update();
+                                  });
                                 });
                               },
-                              icon: isSaved ? const Icon(Icons.star) : const Icon(Icons.star_border)
+                              icon: outfit.saved ? const Icon(Icons.star) : const Icon(Icons.star_border)
                           ),
                           Expanded(
                             child: Text(
@@ -486,11 +481,15 @@ class _OutfitListItemState extends State<OutfitListItem> {
                             IconButton(
                                 onPressed: () {
                                   setState(() {
-                                    isSaved = !isSaved;
-                                    widget.outfit.saved = isSaved;
+                                    setDetailsState(() {
+                                      setEditState(() {
+                                        outfit.saved = !outfit.saved;
+                                        outfit.update();
+                                      });
+                                    });
                                   });
                                 },
-                                icon: isSaved ? const Icon(Icons.star) : const Icon(Icons.star_border)
+                                icon: outfit.saved ? const Icon(Icons.star) : const Icon(Icons.star_border)
                             ),
                             Expanded(
                               child: TextField(
@@ -618,7 +617,7 @@ class _OutfitListItemState extends State<OutfitListItem> {
                           ),
                           TextButton(onPressed: () { Navigator.pop(context); }, child: const Text("Dismiss")),
                           FilledButton(
-                            onPressed: () {
+                            onPressed: () async {
                               setState(() {
                                 setDetailsState(() {
                                   outfit.edit(
@@ -626,13 +625,14 @@ class _OutfitListItemState extends State<OutfitListItem> {
                                     weather: editedWeather,
                                     temperature: editedTemperature,
                                     style: editedStyle,
+                                    saved: outfit.saved,
                                   );
-
-                                  outfit.update();
-
-                                  Navigator.pop(context);
                                 });
                               });
+
+                              outfit.update();
+
+                              Navigator.pop(context);
                             },
                             child: const Text("Save")),
                         ],

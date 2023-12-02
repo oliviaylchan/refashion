@@ -28,7 +28,7 @@ class Outfit {
         temperature = int.tryParse(map['temperature'] ?? '') ?? 0,
         style = map['purpose'] ?? 'Missing style',
         date = DateTime.tryParse(map['date'] ?? '') ?? DateTime.now(),
-        saved = false;
+        saved = map['favorite'] ?? false;
 
   static List<Outfit> listFromMapList(List<Map<String, dynamic>> mapList) {
     return mapList.map((map) => Outfit.fromMap(map)).toList();
@@ -41,6 +41,7 @@ class Outfit {
     int? temperature,
     String? style,
     DateTime? date,
+    bool? saved,
   }) {
     this.outfitName = outfitName ?? this.outfitName;
     this.imageUrl = imageUrl ?? this.imageUrl;
@@ -48,6 +49,7 @@ class Outfit {
     this.temperature = temperature ?? this.temperature;
     this.style = style ?? this.style;
     this.date = date ?? this.date;
+    this.saved = saved ?? this.saved;
   }
 
   void update() async {
@@ -59,6 +61,20 @@ class Outfit {
       'temperature': temperature,
       'purpose': style,
       'date': date.toString(),
+      'favorite': saved,
+    });
+  }
+
+  void makeNew() async {
+    pushData('outfit', {
+      '_id': id,
+      'name': outfitName,
+      'imageUrl': imageUrl,
+      'weather': weather,
+      'temperature': temperature,
+      'purpose': style,
+      'date': date.toString(),
+      'favorite': false,
     });
   }
 }
