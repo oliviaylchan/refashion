@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:refashion/src/data/clothing.dart';
 import 'package:refashion/src/utils/recommendation_utils.dart';
 import '../utils/db_utils.dart';
-import 'dart:developer' as dev;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.allOutfits});
@@ -17,10 +16,16 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late Future<Outfit> futureOutfitOfDay = recommendOutfit(widget.allOutfits);
 
-  late String newOutfitName;
-  late String newOutfitWeather;
+  String newOutfitName = "";
+  String newOutfitWeather = "";
   int newOutfitTemperature = -100;
-  late String newOutfitStyle;
+  String newOutfitStyle = "";
+
+  TextEditingController nameFieldController = TextEditingController();
+  TextEditingController weatherFieldController = TextEditingController();
+  TextEditingController temperatureFieldController = TextEditingController();
+  TextEditingController styleFieldController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -176,6 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           const SizedBox(height: 8),
                           TextField(
+                            controller: nameFieldController,
                             decoration: InputDecoration(
                               hintText: 'Outfit Name',
                               border: OutlineInputBorder(
@@ -205,6 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: TextField(
+                                          controller: weatherFieldController,
                                           decoration: const InputDecoration(
                                             labelText: "Weather",
                                             hintText: "e.g. Sunny",
@@ -230,6 +237,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: TextField(
+                                          controller: temperatureFieldController,
                                           decoration: const InputDecoration(
                                             labelText: "Temperature",
                                             hintText: "e.g., 20",
@@ -256,6 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: TextField(
+                                          controller: styleFieldController,
                                           decoration: const InputDecoration(
                                             labelText: "Style",
                                             hintText: "e.g., Casual",
@@ -280,6 +289,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                           newOutfitStyle = "";
                                           newOutfitTemperature = -100;
                                           newOutfitWeather = "";
+
+                                          nameFieldController.clear();
+                                          weatherFieldController.clear();
+                                          temperatureFieldController.clear();
+                                          styleFieldController.clear();
                                         });
                                       }, child: const Text("Clear")
                                     ),
@@ -290,22 +304,35 @@ class _HomeScreenState extends State<HomeScreen> {
                                             || newOutfitWeather.isEmpty
                                             || newOutfitName.isEmpty
                                           ) {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  title: const Text("Please fill all fields!", textScaleFactor: 0.8,),
+                                                  actions: [ TextButton(
+                                                    child: const Text("OK", textScaleFactor: 1.2,),
+                                                    onPressed: () {Navigator.pop(context);}
+                                                  ), ]
+                                                );
+                                              });
                                             return;
                                           }
 
-                                          dev.log("MAKING!!!!");
-
-                                          Outfit newOutfit = Outfit(
+                                          Outfit(
                                             getObjectId(),
                                             newOutfitName,
-                                            "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/181px-Cat_August_2010-4.jpg",
+                                            "https://images.unsplash.com/photo-1609743522653-52354461eb27?q=80&w=2487&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                                             newOutfitWeather,
                                             newOutfitTemperature,
                                             newOutfitStyle,
                                             DateTime.now(),
                                             false
-                                          );
-                                          newOutfit.makeNew();
+                                          ).makeNew();
+
+                                          nameFieldController.clear();
+                                          weatherFieldController.clear();
+                                          temperatureFieldController.clear();
+                                          styleFieldController.clear();
                                         },
                                         child: const Text("Add")),
                                   ],
