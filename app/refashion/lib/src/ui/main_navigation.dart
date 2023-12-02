@@ -72,7 +72,7 @@ class _MainNavigationState extends State<MainNavigation> {
                     NavigationDestination(
                         selectedIcon: Icon(Icons.person),
                         icon: Icon(Icons.person_outlined),
-                        label: "Calendar"),
+                        label: "Clothes"),
                     NavigationDestination(
                         selectedIcon: Icon(Icons.analytics),
                         icon: Icon(Icons.analytics_outlined),
@@ -93,7 +93,7 @@ class _MainNavigationState extends State<MainNavigation> {
 
               // Navbar destinations
               body: <Widget>[
-                ClothingScreen(allOutfits: allClothes!),
+                ClothingScreen(allClothings: allClothes!),
                 const StatsScreen(),
                 HomeScreen(allOutfits: allOutfits!),
                 WardrobeScreen(allOutfits: allOutfits!),

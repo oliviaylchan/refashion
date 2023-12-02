@@ -125,18 +125,18 @@ class ForegroundPainter extends CustomPainter {
     const p11 = Offset(28, 120);
     const p12 = Offset(20, 140);
 
-    const p13 = Offset(370, 765);
-    const p14 = Offset(354, 765);
-    const p15 = Offset(346, 765);
-    const p16 = Offset(270, 765);
-    const p17 = Offset(362, 757);
-    const p18 = Offset(290, 757);
-    const p19 = Offset(370, 749);
-    const p20 = Offset(346, 749);
-    const p21 = Offset(370, 741);
-    const p22 = Offset(354, 741);
-    const p23 = Offset(362, 692);
-    const p24 = Offset(370, 665);
+    const p13 = Offset(370+20, 765+110);
+    const p14 = Offset(354+20, 765+110);
+    const p15 = Offset(346+20, 765+110);
+    const p16 = Offset(270+20, 765+110);
+    const p17 = Offset(362+20, 757+110);
+    const p18 = Offset(290+20, 757+110);
+    const p19 = Offset(370+20, 749+110);
+    const p20 = Offset(346+20, 749+110);
+    const p21 = Offset(370+20, 741+110);
+    const p22 = Offset(354+20, 741+110);
+    const p23 = Offset(362+20, 692+110);
+    const p24 = Offset(370+20, 665+110);
 
     //Top left corner
     canvas.drawLine(p1, p2, paint);
@@ -163,11 +163,11 @@ class ForegroundPainter extends CustomPainter {
     canvas.drawLine(p21, p24, paint);
 
     //Hanger logo
-    const h1 = Offset(150, 480); const h2 = Offset(240, 480);
-    const h3 = Offset(200, 448); const h4 = Offset(150, 473);
-    const h5 = Offset(220, 473); const h6 = Offset(220, 445);
-    const h7 = Offset(195, 425); const h8 = Offset(175, 435);
-    const h9 = Offset(180, 440);
+    const h1 = Offset(150+10, 480+50); const h2 = Offset(240+10, 480+50);
+    const h3 = Offset(200+10, 448+50); const h4 = Offset(150+10, 473+50);
+    const h5 = Offset(220+10, 473+50); const h6 = Offset(220+10, 445+50);
+    const h7 = Offset(195+10, 425+50); const h8 = Offset(175+10, 435+50);
+    const h9 = Offset(180+10, 440+50);
     canvas.drawLine(h1.translate(2,2), h2.translate(2,2), paintS); canvas.drawLine(h3.translate(2,2), h2.translate(2,2), paintS);
     canvas.drawLine(h4.translate(2,2), h3.translate(2,2), paintS); canvas.drawLine(h4.translate(2,2), h5.translate(2,2), paintS);
     canvas.drawLine(h1.translate(2,2), h6.translate(2,2), paintS); canvas.drawLine(h6.translate(2,2), h7.translate(2,2), paintS);

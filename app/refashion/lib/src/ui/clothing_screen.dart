@@ -6,18 +6,18 @@ import '../utils/nav_utils.dart';
 import 'main_navigation.dart';
 
 class ClothingScreen extends StatefulWidget {
-  const ClothingScreen({super.key, required this.allOutfits});
+  const ClothingScreen({super.key, required this.allClothings});
 
-  final List<Clothing> allOutfits;
+  final List<Clothing> allClothings;
 
   @override
   State<ClothingScreen> createState() => _ClothingScreenState();
 }
 
 class _ClothingScreenState extends State<ClothingScreen> {
-  late List<Clothing> matchingOutfits = widget.allOutfits;
+  late List<Clothing> matchingClothings = widget.allClothings;
 
-  String outfitNameSearch = "";
+  String clothingNameSearch = "";
 
   late bool showAll = true;
 
@@ -36,13 +36,13 @@ class _ClothingScreenState extends State<ClothingScreen> {
             Navigator.pushAndRemoveUntil(
                 context,
                 FadeTransitionTo(
-                    screen: const MainNavigation(startPageIndex: 3)),
+                    screen: const MainNavigation(startPageIndex: 0)),
                 (route) => false);
           },
           child: CustomScrollView(
             slivers: [
               const SliverAppBar(
-                title: Text("Wardrobe"),
+                title: Text("Clothes"),
                 centerTitle: true,
                 forceMaterialTransparency: true,
               ),
@@ -59,11 +59,11 @@ class _ClothingScreenState extends State<ClothingScreen> {
                                 padding: const EdgeInsets.all(4.0),
                                 child: IconButton.filledTonal(
                                     onPressed: () {
-                                      searchOutfits();
+                                      searchClothings();
                                     },
                                     icon: const Icon(Icons.search)),
                               ),
-                              hintText: 'Outfit Name',
+                              hintText: 'Clothing Name',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                                 borderSide:
@@ -74,7 +74,7 @@ class _ClothingScreenState extends State<ClothingScreen> {
                               setState(() {
                                 showAll = false;
 
-                                outfitNameSearch = query;
+                                clothingNameSearch = query;
                               });
                             },
                           ),
@@ -93,14 +93,14 @@ class _ClothingScreenState extends State<ClothingScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Total outfits: ${widget.allOutfits.length}"),
-                        Text("Found outfits: ${matchingOutfits.length}"),
+                        Text("Total clothing items: ${widget.allClothings.length}"),
+                        Text("Found clothing items: ${matchingClothings.length}"),
                       ],
                     ),
                   )
                 ]),
               ),
-              OutfitListView(outfits: matchingOutfits),
+              ClothingListView(clothings: matchingClothings),
               const SliverPadding(padding: EdgeInsets.only(bottom: 12)),
             ],
           ),
@@ -209,7 +209,7 @@ class _ClothingScreenState extends State<ClothingScreen> {
                                 child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      const Text("Show only saved outfits:"),
+                                      const Text("Show only saved clothings:"),
                                       Checkbox(
                                           value: showOnlySaved,
                                           onChanged: (res) {
@@ -242,7 +242,7 @@ class _ClothingScreenState extends State<ClothingScreen> {
                                     FilledButton(
                                         onPressed: () {
                                           Navigator.pop(context);
-                                          searchOutfits();
+                                          searchClothings();
                                         },
                                         child: const Text("Update"))
                                   ],
@@ -259,49 +259,49 @@ class _ClothingScreenState extends State<ClothingScreen> {
         });
   }
 
-  // Search through all outfits based on query results
-  void searchOutfits() {
+  // Search through all clothings based on query results
+  void searchClothings() {
     if (showAll) {
-      matchingOutfits = widget.allOutfits;
+      matchingClothings = widget.allClothings;
       return;
     }
 
     setState(() {
-      matchingOutfits = [];
+      matchingClothings = [];
     });
 
-    for (Clothing outfit in widget.allOutfits) {
-      if (outfit.outfitName
+    for (Clothing clothing in widget.allClothings) {
+      if (clothing.clothingName
               .toLowerCase()
-              .contains(outfitNameSearch.toLowerCase()) &&
-          temperatureRange.start <= outfit.temperature &&
-          temperatureRange.end >= outfit.temperature) {
+              .contains(clothingNameSearch.toLowerCase()) &&
+          temperatureRange.start <= clothing.temperature &&
+          temperatureRange.end >= clothing.temperature) {
         setState(() {
-          matchingOutfits.add(outfit);
+          matchingClothings.add(clothing);
         });
       }
     }
   }
 }
 
-// A list item that displays an outfit
-class OutfitListItem extends StatefulWidget {
-  const OutfitListItem({super.key, required this.outfit});
-  final Clothing outfit;
+// A list item that displays an clothing
+class ClothingListItem extends StatefulWidget {
+  const ClothingListItem({super.key, required this.clothing});
+  final Clothing clothing;
 
   @override
-  State<OutfitListItem> createState() => _OutfitListItemState();
+  State<ClothingListItem> createState() => _ClothingListItemState();
 }
 
-class _OutfitListItemState extends State<OutfitListItem> {
-  late String editedName = widget.outfit.outfitName;
-  late int editedTemperature = widget.outfit.temperature;
+class _ClothingListItemState extends State<ClothingListItem> {
+  late String editedName = widget.clothing.clothingName;
+  late int editedTemperature = widget.clothing.temperature;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        showOutfitDetailsDialog(context, widget.outfit);
+        showClothingDetailsDialog(context, widget.clothing);
       },
       child: Card(
         child: Padding(
@@ -309,7 +309,7 @@ class _OutfitListItemState extends State<OutfitListItem> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10.0),
             child: Image.network(
-              widget.outfit.imageUrl,
+              widget.clothing.imageUrl,
               fit: BoxFit.cover,
             ),
           ),
@@ -319,7 +319,7 @@ class _OutfitListItemState extends State<OutfitListItem> {
   }
 
   // Show details modal
-  void showOutfitDetailsDialog(BuildContext context, Clothing outfit) {
+  void showClothingDetailsDialog(BuildContext context, Clothing clothing) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -336,7 +336,7 @@ class _OutfitListItemState extends State<OutfitListItem> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(20.0),
                       child: Image.network(
-                        outfit.imageUrl,
+                        clothing.imageUrl,
                         fit: BoxFit.fitWidth,
                       ),
                     ),
@@ -350,14 +350,14 @@ class _OutfitListItemState extends State<OutfitListItem> {
                               onPressed: () {
                                 setState(() {
                                   setDetailsState(() {
-                                    outfit.update();
+                                    clothing.update();
                                   });
                                 });
                               },
                               icon: const Icon(Icons.star_border)),
                           Expanded(
                             child: Text(
-                              outfit.outfitName,
+                              clothing.clothingName,
                               style: const TextStyle(
                                 fontSize: 16.0,
                                 fontWeight: FontWeight.bold,
@@ -371,7 +371,7 @@ class _OutfitListItemState extends State<OutfitListItem> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Temperature: ${outfit.temperature}°C'),
+                            Text('Temperature: ${clothing.temperature}°C'),
                           ],
                         ),
                       ),
@@ -389,8 +389,8 @@ class _OutfitListItemState extends State<OutfitListItem> {
                             child: const Text("Dismiss")),
                         FilledButton(
                             onPressed: () {
-                              showOutfitEditDialog(
-                                  context, outfit, setDetailsState);
+                              showClothingEditDialog(
+                                  context, clothing, setDetailsState);
                             },
                             child: const Text("Edit")),
                       ],
@@ -404,8 +404,8 @@ class _OutfitListItemState extends State<OutfitListItem> {
   }
 
   // Show edit panel
-  void showOutfitEditDialog(
-      BuildContext context, Clothing outfit, StateSetter setDetailsState) {
+  void showClothingEditDialog(
+      BuildContext context, Clothing clothing, StateSetter setDetailsState) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -432,7 +432,7 @@ class _OutfitListItemState extends State<OutfitListItem> {
                       },
                       blendMode: BlendMode.dstIn,
                       child: Image.network(
-                        outfit.imageUrl,
+                        clothing.imageUrl,
                         fit: BoxFit.fitWidth,
                       ),
                     ),
@@ -448,7 +448,7 @@ class _OutfitListItemState extends State<OutfitListItem> {
                               setState(() {
                                 setDetailsState(() {
                                   setEditState(() {
-                                    outfit.update();
+                                    clothing.update();
                                   });
                                 });
                               });
@@ -457,7 +457,7 @@ class _OutfitListItemState extends State<OutfitListItem> {
                         Expanded(
                           child: TextField(
                             decoration: InputDecoration(
-                                hintText: outfit.outfitName,
+                                hintText: clothing.clothingName,
                                 hintStyle: const TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.bold)),
                             onChanged: (value) {
@@ -509,7 +509,7 @@ class _OutfitListItemState extends State<OutfitListItem> {
                                   child: TextField(
                                     decoration: InputDecoration(
                                       labelText: "Temperature",
-                                      hintText: outfit.temperature.toString(),
+                                      hintText: clothing.temperature.toString(),
                                     ),
                                     inputFormatters: [
                                       FilteringTextInputFormatter.digitsOnly
@@ -579,14 +579,14 @@ class _OutfitListItemState extends State<OutfitListItem> {
                           onPressed: () async {
                             setState(() {
                               setDetailsState(() {
-                                outfit.edit(
-                                  outfitName: editedName,
+                                clothing.edit(
+                                  clothingName: editedName,
                                   temperature: editedTemperature,
                                 );
                               });
                             });
 
-                            outfit.update();
+                            clothing.update();
 
                             Navigator.pop(context);
                           },
@@ -603,14 +603,14 @@ class _OutfitListItemState extends State<OutfitListItem> {
   }
 }
 
-// The view to show all the matching outfits
-class OutfitListView extends StatelessWidget {
-  const OutfitListView({super.key, required this.outfits});
-  final List<Clothing> outfits;
+// The view to show all the matching clothings
+class ClothingListView extends StatelessWidget {
+  const ClothingListView({super.key, required this.clothings});
+  final List<Clothing> clothings;
 
   @override
   Widget build(BuildContext context) {
-    if (outfits.isEmpty) {
+    if (clothings.isEmpty) {
       return const SliverFillRemaining(
           child: Center(
               child: Column(
@@ -625,9 +625,9 @@ class OutfitListView extends StatelessWidget {
       return SliverMasonryGrid(
         delegate: SliverChildBuilderDelegate(
           (context, index) {
-            return OutfitListItem(outfit: outfits[index]);
+            return ClothingListItem(clothing: clothings[index]);
           },
-          childCount: outfits.length,
+          childCount: clothings.length,
         ),
         gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
