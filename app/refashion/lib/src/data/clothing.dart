@@ -79,13 +79,49 @@ class Outfit {
   }
 }
 
-// A piece of clothing, attached to an outfit
 class Clothing {
+  ObjectId id;
+
   String outfitName;
   String clothingName;
   String imageUrl;
 
   int temperature;
 
-  Clothing(this.outfitName, this.clothingName, this.imageUrl, this.temperature);
+  Clothing(this.id, this.outfitName, this.clothingName, this.imageUrl,
+      this.temperature);
+
+  Clothing.fromMap(Map<String, dynamic> map)
+      : id = map['_id'] ?? 'Missing id',
+        outfitName = map['outfitName'] ?? 'Missing outfit name',
+        clothingName = map['clothingName'] ?? 'Missing clothing name',
+        imageUrl = map['imageUrl'] ??
+            'https://unblast.com/wp-content/uploads/2020/04/404-Page-Illustration.jpg',
+        temperature = int.tryParse(map['temperature'] ?? '') ?? 0;
+
+  static List<Clothing> listFromMapList(List<Map<String, dynamic>> mapList) {
+    return mapList.map((map) => Clothing.fromMap(map)).toList();
+  }
+
+  void edit({
+    String? outfitName,
+    String? clothingName,
+    String? imageUrl,
+    int? temperature,
+  }) {
+    this.outfitName = outfitName ?? this.outfitName;
+    this.clothingName = clothingName ?? this.clothingName;
+    this.imageUrl = imageUrl ?? this.imageUrl;
+    this.temperature = temperature ?? this.temperature;
+  }
+
+  void update() async {
+    updateData('clothing', {
+      '_id': id,
+      'outfitName': outfitName,
+      'clothingName': clothingName,
+      'imageUrl': imageUrl,
+      'temperature': temperature,
+    });
+  }
 }

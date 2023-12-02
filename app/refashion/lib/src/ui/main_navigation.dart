@@ -20,90 +20,87 @@ class _MainNavigationState extends State<MainNavigation> {
   late int currPageIndex = widget.startPageIndex;
 
   late Future<List<Map<String, dynamic>>> futureOutfitData;
+  late Future<List<Map<String, dynamic>>> futureClothingData;
 
   List<Outfit>? allOutfits;
+  List<Clothing>? allClothes;
 
   @override
   void initState() {
     super.initState();
     futureOutfitData = pullData('outfit');
+    futureClothingData = pullData('item');
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: futureOutfitData,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            backgroundColor: Colors.white,
-            body: Center(child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Loading data!"),
-                SizedBox(height: 16.0),
-                CircularProgressIndicator(),
-              ],
-            )),
-          );
-        } else if (snapshot.hasError) {
-          return Text("Error: ${snapshot.error}");
-        } else {
-          allOutfits ??= Outfit.listFromMapList(snapshot.data!);
+        future: Future.wait([futureOutfitData, futureClothingData]),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Scaffold(
+              backgroundColor: Colors.white,
+              body: Center(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Loading data!"),
+                  SizedBox(height: 16.0),
+                  CircularProgressIndicator(),
+                ],
+              )),
+            );
+          } else if (snapshot.hasError) {
+            return Text("Error: ${snapshot.error}");
+          } else {
+            allOutfits ??= Outfit.listFromMapList(snapshot.data![0]);
+            allClothes ??= Clothing.listFromMapList(snapshot.data![1]);
 
-          return Scaffold(
-            bottomNavigationBar: NavigationBar(
-                selectedIndex: currPageIndex,
-                labelBehavior: NavigationDestinationLabelBehavior
-                    .onlyShowSelected,
-                onDestinationSelected: (int index) {
-                  setState(() {
-                    currPageIndex = index;
-                  });
-                },
+            return Scaffold(
+              bottomNavigationBar: NavigationBar(
+                  selectedIndex: currPageIndex,
+                  labelBehavior:
+                      NavigationDestinationLabelBehavior.onlyShowSelected,
+                  onDestinationSelected: (int index) {
+                    setState(() {
+                      currPageIndex = index;
+                    });
+                  },
 
-                // Navbar icons
-                destinations: const <Widget>[
-                  NavigationDestination(
-                      selectedIcon: Icon(Icons.calendar_month),
-                      icon: Icon(Icons.calendar_month_outlined),
-                      label: "Calendar"
-                  ),
-                  NavigationDestination(
-                      selectedIcon: Icon(Icons.analytics),
-                      icon: Icon(Icons.analytics_outlined),
-                      label: "Analytics"
-                  ),
-                  NavigationDestination(
-                      selectedIcon: Icon(Icons.home),
-                      icon: Icon(Icons.home_outlined),
-                      label: "Home"
-                  ),
-                  NavigationDestination(
-                      selectedIcon: Icon(Icons.person),
-                      icon: Icon(Icons.person_outlined),
-                      label: "Wardrobe"
-                  ),
-                  NavigationDestination(
-                      selectedIcon: Icon(Icons.settings),
-                      icon: Icon(Icons.settings_outlined),
-                      label: "Settings"
-                  ),
-                ]
-            ),
+                  // Navbar icons
+                  destinations: const <Widget>[
+                    NavigationDestination(
+                        selectedIcon: Icon(Icons.calendar_month),
+                        icon: Icon(Icons.calendar_month_outlined),
+                        label: "Calendar"),
+                    NavigationDestination(
+                        selectedIcon: Icon(Icons.analytics),
+                        icon: Icon(Icons.analytics_outlined),
+                        label: "Analytics"),
+                    NavigationDestination(
+                        selectedIcon: Icon(Icons.home),
+                        icon: Icon(Icons.home_outlined),
+                        label: "Home"),
+                    NavigationDestination(
+                        selectedIcon: Icon(Icons.person),
+                        icon: Icon(Icons.person_outlined),
+                        label: "Wardrobe"),
+                    NavigationDestination(
+                        selectedIcon: Icon(Icons.settings),
+                        icon: Icon(Icons.settings_outlined),
+                        label: "Settings"),
+                  ]),
 
-            // Navbar destinations
-            body: <Widget>[
-              ClothingScreen(allOutfits: allOutfits!),
-              StatsScreen(allOutfits: allOutfits!),
-              HomeScreen(allOutfits: allOutfits!),
-              WardrobeScreen(allOutfits: allOutfits!),
-              const OptionsScreen(),
-            ][currPageIndex],
-          );
-        }
-      }
-    );
+              // Navbar destinations
+              body: <Widget>[
+                ClothingScreen(allOutfits: allClothes!),
+                const StatsScreen(),
+                HomeScreen(allOutfits: allOutfits!),
+                WardrobeScreen(allOutfits: allOutfits!),
+                const OptionsScreen(),
+              ][currPageIndex],
+            );
+          }
+        });
   }
 }
-
