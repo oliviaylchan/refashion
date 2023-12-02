@@ -70,8 +70,8 @@ class _MainNavigationState extends State<MainNavigation> {
                   // Navbar icons
                   destinations: const <Widget>[
                     NavigationDestination(
-                        selectedIcon: Icon(Icons.calendar_month),
-                        icon: Icon(Icons.calendar_month_outlined),
+                        selectedIcon: Icon(Icons.person),
+                        icon: Icon(Icons.person_outlined),
                         label: "Calendar"),
                     NavigationDestination(
                         selectedIcon: Icon(Icons.analytics),
@@ -82,8 +82,8 @@ class _MainNavigationState extends State<MainNavigation> {
                         icon: Icon(Icons.home_outlined),
                         label: "Home"),
                     NavigationDestination(
-                        selectedIcon: Icon(Icons.person),
-                        icon: Icon(Icons.person_outlined),
+                        selectedIcon: Icon(Icons.person_pin_rounded),
+                        icon: Icon(Icons.person_pin_outlined),
                         label: "Wardrobe"),
                     NavigationDestination(
                         selectedIcon: Icon(Icons.settings),
