@@ -96,7 +96,7 @@ class Clothing {
         outfitName = map['outfitName'] ?? 'Missing outfit name',
         clothingName = map['clothingName'] ?? 'Missing clothing name',
         imageUrl = map['imageUrl'] ??
-            'https://unblast.com/wp-content/uploads/2020/04/404-Page-Illustration.jpg',
+            'https://images.unsplash.com/photo-1609743522653-52354461eb27?q=80&w=2487&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA',
         temperature = int.tryParse(map['temperature'] ?? '') ?? 0;
 
   static List<Clothing> listFromMapList(List<Map<String, dynamic>> mapList) {
